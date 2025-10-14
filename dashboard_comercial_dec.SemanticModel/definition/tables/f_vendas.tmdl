@@ -1,0 +1,172 @@
+table f_vendas
+	lineageTag: d07b91f1-29f5-4fa3-902c-e4d2d3f533da
+
+	column Pedido
+		dataType: int64
+		formatString: 0
+		lineageTag: 2d5b9bdd-1429-4fce-b670-786a0d5ea48c
+		summarizeBy: sum
+		sourceColumn: Pedido
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Descrição Produto'
+		dataType: string
+		lineageTag: c6f8bf62-88ca-4118-bef9-882f4c891800
+		summarizeBy: none
+		sourceColumn: Descrição Produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column Marca
+		dataType: string
+		lineageTag: 3deab455-648b-4bab-b58e-541fc5f9a4f8
+		summarizeBy: none
+		sourceColumn: Marca
+
+		annotation SummarizationSetBy = Automatic
+
+	column Embalagem
+		dataType: string
+		lineageTag: 96717c4a-f58e-4352-8063-a9376bff76e0
+		summarizeBy: none
+		sourceColumn: Embalagem
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Tipo Item Venda'
+		dataType: string
+		lineageTag: dadc91da-452e-40ca-b77c-849764d5393a
+		summarizeBy: none
+		sourceColumn: Tipo Item Venda
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Quant.'
+		dataType: int64
+		formatString: 0
+		lineageTag: 0d638ea0-1d47-41d0-80b9-8f16cfa27e0f
+		summarizeBy: sum
+		sourceColumn: Quant.
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Quant. BNF'
+		dataType: double
+		lineageTag: 8a04b5ba-f1a3-462e-8e76-bfbc3b7d6c39
+		summarizeBy: sum
+		sourceColumn: Quant. BNF
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Pre. Venda'
+		dataType: int64
+		formatString: 0
+		lineageTag: 84c83eac-098b-4afc-ae1c-8ca7cd143a35
+		summarizeBy: sum
+		sourceColumn: Pre. Venda
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Total Tabela'
+		dataType: double
+		lineageTag: 019b50a4-1a2a-4279-8495-c870038377c5
+		summarizeBy: sum
+		sourceColumn: Total Tabela
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Desconto
+		dataType: double
+		lineageTag: 553ac684-d4f3-430b-baa0-90c649872ef5
+		summarizeBy: sum
+		sourceColumn: Desconto
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Total Fechado'
+		dataType: double
+		formatString: 0
+		lineageTag: c97d635c-02cb-4e12-808e-d934125942cd
+		summarizeBy: sum
+		sourceColumn: Total Fechado
+
+		annotation SummarizationSetBy = Automatic
+
+	column Data
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: f0ec2d69-1f15-45da-8274-830b527b108b
+		summarizeBy: none
+		sourceColumn: Data
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Descrição RCA'
+		dataType: string
+		lineageTag: 2e454276-58b1-4872-bd3c-eae84cf51c41
+		summarizeBy: none
+		sourceColumn: Descrição RCA
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Descrição Cliente'
+		dataType: string
+		lineageTag: 41584e04-b99d-45f3-b8b7-5d48be7d6a12
+		summarizeBy: none
+		sourceColumn: Descrição Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Tipo Pedido Venda'
+		dataType: string
+		lineageTag: 66dd85f0-c130-4c34-b6d9-e0bfc1c6a0d0
+		summarizeBy: none
+		sourceColumn: Tipo Pedido Venda
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Desconto Ajustado' = ```
+			
+			IF(f_vendas[Tipo Item Venda] = "VENDA BONIFICADA", 
+			-f_vendas[Total Tabela],
+			f_vendas[Desconto]
+			)
+			```
+		lineageTag: 373f5d48-f272-46bb-84cb-f09a4fe1881b
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition f_vendas = m
+		mode: import
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents("C:\Users\levia\Desktop\Profissional\pbi_dashboard_comercial\basedados\1.2.03-1464 VERSAO MES A MES (13).xlsx"), null, true),
+				    #"ITENS DO PEDIDO_Sheet" = Fonte{[Item="ITENS DO PEDIDO",Kind="Sheet"]}[Data],
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(#"ITENS DO PEDIDO_Sheet", [PromoteAllScalars=true]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"Pedido", Int64.Type}, {"Descrição Produto", type text}, {"Marca", type text}, {"Embalagem", type text}, {"Tipo Item Venda", type text}, {"Quant.", Int64.Type}, {"Quant. BNF", Int64.Type}, {"Pre. Venda", Int64.Type}, {"Total Tabela", type number}, {"Desconto", type number}, {"Total Fechado", type number}}),
+				    #"Valor Substituído2" = Table.ReplaceValue(#"Tipo Alterado","(Null)",null,Replacer.ReplaceValue,{"Tipo Item Venda"}),
+				    #"Preenchido Abaixo" = Table.FillDown(#"Valor Substituído2",{"Pedido", "Descrição Produto", "Marca", "Embalagem", "Tipo Item Venda"}),
+				    #"Valor Substituído" = Table.ReplaceValue(#"Preenchido Abaixo",null,0,Replacer.ReplaceValue,{"Quant. BNF"}),
+				    #"Valor Substituído1" = Table.ReplaceValue(#"Valor Substituído","UNIDADE","UN",Replacer.ReplaceText,{"Embalagem"}),
+				    #"Consultas Mescladas" = Table.NestedJoin(#"Valor Substituído1", {"Pedido"}, f_pedidosvenda, {"Pedido"}, "f_pedidosvenda", JoinKind.LeftOuter),
+				    #"f_pedidosvenda Expandido" = Table.ExpandTableColumn(#"Consultas Mescladas", "f_pedidosvenda", {"Descrição RCA", "Data", "Descrição Cliente", "Tipo Pedido Venda"}, {"Descrição RCA", "Data", "Descrição Cliente", "Tipo Pedido Venda"}),
+				    #"Colunas Reordenadas" = Table.ReorderColumns(#"f_pedidosvenda Expandido",{"Data", "Pedido", "Descrição RCA", "Descrição Cliente", "Tipo Pedido Venda", "Descrição Produto", "Marca", "Embalagem", "Tipo Item Venda", "Quant.", "Quant. BNF", "Pre. Venda", "Total Tabela", "Desconto", "Total Fechado"})
+				in
+				    #"Colunas Reordenadas"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

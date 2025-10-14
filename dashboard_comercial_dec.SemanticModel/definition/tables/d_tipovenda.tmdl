@@ -1,0 +1,25 @@
+table d_tipovenda
+	lineageTag: c5309b20-03ff-43d7-a656-16424d9557fa
+
+	column 'Tipo Item Venda'
+		dataType: string
+		lineageTag: 2b214125-2810-4130-96ab-063e6949d676
+		summarizeBy: none
+		sourceColumn: Tipo Item Venda
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_tipovenda = m
+		mode: import
+		source =
+				let
+				    Fonte = f_vendas,
+				    #"Outras Colunas Removidas" = Table.SelectColumns(Fonte,{"Tipo Item Venda"}),
+				    #"Duplicatas Removidas" = Table.Distinct(#"Outras Colunas Removidas")
+				in
+				    #"Duplicatas Removidas"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

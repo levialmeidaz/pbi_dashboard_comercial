@@ -1,0 +1,55 @@
+table d_vendedor
+	lineageTag: d44d8248-3bb7-462f-8f79-eba06f889507
+
+	column 'Descrição RCA'
+		dataType: string
+		lineageTag: d2326c31-c3c3-4228-ba98-d22ff4505c12
+		summarizeBy: none
+		sourceColumn: Descrição RCA
+
+		annotation SummarizationSetBy = Automatic
+
+	column NomeVendedor
+		dataType: string
+		lineageTag: 576996c1-914f-47e8-955b-0e97df83b534
+		summarizeBy: none
+		sourceColumn: NomeVendedor
+
+		annotation SummarizationSetBy = Automatic
+
+	column Regiao
+		dataType: string
+		lineageTag: 3586b4cb-86e1-4c27-9279-dabf101aa487
+		summarizeBy: none
+		sourceColumn: Regiao
+
+		annotation SummarizationSetBy = Automatic
+
+	column idVendedor
+		dataType: string
+		lineageTag: 93aa3cad-5c1c-4047-b2c7-0e793ed696fe
+		summarizeBy: none
+		sourceColumn: idVendedor
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_vendedor = m
+		mode: import
+		source =
+				let
+				    Fonte = f_vendas,
+				    #"Outras Colunas Removidas" = Table.SelectColumns(Fonte,{"Descrição RCA"}),
+				    #"Duplicatas Removidas" = Table.Distinct(#"Outras Colunas Removidas"),
+				    #"Texto Inserido Após o Delimitador" = Table.AddColumn(#"Duplicatas Removidas", "Texto Após o Delimitador", each Text.AfterDelimiter([Descrição RCA], " - "), type text),
+				    #"Dividir Coluna por Delimitador" = Table.SplitColumn(#"Texto Inserido Após o Delimitador", "Texto Após o Delimitador", Splitter.SplitTextByEachDelimiter({" - "}, QuoteStyle.Csv, false), {"Texto Após o Delimitador.1", "Texto Após o Delimitador.2"}),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Dividir Coluna por Delimitador",{{"Texto Após o Delimitador.1", type text}, {"Texto Após o Delimitador.2", type text}}),
+				    #"Colunas Renomeadas" = Table.RenameColumns(#"Tipo Alterado",{{"Texto Após o Delimitador.1", "NomeVendedor"}, {"Texto Após o Delimitador.2", "Regiao"}}),
+				    #"Texto Inserido Antes do Delimitador" = Table.AddColumn(#"Colunas Renomeadas", "Texto Antes do Delimitador", each Text.BeforeDelimiter([Descrição RCA], " - "), type text),
+				    #"Colunas Renomeadas1" = Table.RenameColumns(#"Texto Inserido Antes do Delimitador",{{"Texto Antes do Delimitador", "idVendedor"}})
+				in
+				    #"Colunas Renomeadas1"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

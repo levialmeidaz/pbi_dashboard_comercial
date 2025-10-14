@@ -1,0 +1,205 @@
+table Medidas
+	lineageTag: 75980df3-5c5e-418d-8939-7de8aea4ad32
+
+	measure Faturamento = SUM(f_vendas[Total Fechado]) + 0
+		formatString: "R$"\ #,0;-"R$"\ #,0;"R$"\ #,0
+		displayFolder: 0. Padrão
+		lineageTag: 2e49c883-974b-4627-9242-c6c1a67ae01e
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Pedidos Faturados' = DISTINCTCOUNT(f_vendas[Pedido])
+		formatString: 0
+		displayFolder: 0. Padrão
+		lineageTag: 252589c4-b44f-4c4c-8b92-f58cc81073cb
+
+	measure 'Produtos Vendidos' = DISTINCTCOUNT(f_vendas[Descrição Produto])
+		formatString: 0
+		displayFolder: 0. Padrão
+		lineageTag: b2744a25-9d0d-40b4-a331-fd332e35316f
+
+	measure 'Clientes Positivados' = DISTINCTCOUNT(f_vendas[Descrição Cliente])
+		formatString: 0
+		displayFolder: 0. Padrão
+		lineageTag: 6b4b1dd4-75ef-45aa-a1ba-0134258a12c9
+
+	measure 'Vendas Transmitidas' = SUM(f_vendas[Total Tabela]) + 0
+		formatString: "R$"\ #,0;-"R$"\ #,0;"R$"\ #,0
+		displayFolder: 0. Padrão
+		lineageTag: 5c0176bb-1e89-4059-aa4d-a66b28ef35e0
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure Descontos = SUM(f_vendas[Desconto Ajustado])
+		displayFolder: 0. Padrão
+		lineageTag: e1d3b55d-fa28-48cd-b0ce-eda39847f73a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '% Descontos' =
+			
+			DIVIDE(
+			    [Descontos], [Faturamento]
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 1. Percentuais
+		lineageTag: 682b3bbb-bd75-432c-8eee-41701409e1ea
+
+	measure 'Meta Faturamento' = SUM(f_metas[ValorMeta])
+		formatString: "R$"\ #,0;-"R$"\ #,0;"R$"\ #,0
+		displayFolder: 2. Metas
+		lineageTag: 75fb4821-cbc8-4863-a460-22a9260acc77
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure '% Meta' =
+			
+			DIVIDE(
+			([Faturamento] - [Meta Faturamento]), [Meta Faturamento], 0
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 1. Percentuais
+		lineageTag: b436a4de-5983-4e12-be61-526d89419e97
+
+	measure 'Meta YTD' =
+			
+			CALCULATE(
+			    [Meta Faturamento],
+			    DATESYTD(d_calendario[Date])
+			)
+		displayFolder: 3. Temporais
+		lineageTag: 8792a86a-92d9-439a-8ac2-fdd7a794de10
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Meta =
+			
+			SWITCH(
+			    TRUE(),
+			    ISINSCOPE( d_calendario[Mês] ), [Meta Faturamento],             // Avalia se está no contexto de mês
+			    ISINSCOPE( d_calendario[Trimestre] ), [Meta QTD],       // Avalia se está no contexto de trimestre
+			    [Meta YTD]                                              // Avalia se está no contexto de ano
+			)
+		formatString: "R$"\ #,0;-"R$"\ #,0;"R$"\ #,0
+		displayFolder: 2. Metas
+		lineageTag: 5f9a0727-8dae-4914-8ac5-0351dcc5f5f2
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Ticket Medio Cliente' =
+			
+			DIVIDE(
+			    [Vendas Transmitidas],
+			    [Pedidos Faturados],
+			    0
+			)
+		formatString: "R$"\ #,0;-"R$"\ #,0;"R$"\ #,0
+		displayFolder: 0. Padrão
+		lineageTag: 00ba2046-9b6d-4d78-8c33-86d589a6667c
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Meta QTD' =
+			
+			CALCULATE(
+			    [Meta Faturamento],
+			    DATESQTD(d_calendario[Date])
+			)
+		displayFolder: 3. Temporais
+		lineageTag: d43c58db-1092-462d-8265-92ade7f5783a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'ID Selecionado' = SELECTEDVALUE(auxAnalise[auxAnalise Pedido])
+		formatString: 0
+		displayFolder: 4. Dinãmicas
+		lineageTag: 30d5c91d-b71c-46b8-8943-9576eb973287
+
+	measure 'Titulo Data' = ```
+			
+			IF(
+			    [ID Selecionado] = 0, 
+			    "VENDAS TRANSMITIDAS",
+			    "FATURAMENTO"
+			) & " AO LONGO DO TEMPO"
+			```
+		displayFolder: 4. Dinãmicas
+		lineageTag: 008e2c5c-a993-4578-9b19-b3bc28103797
+
+	measure 'Melhor Mes Liquido' = ```
+			
+			MAXX (
+			    TOPN (
+			        1,
+			        SUMMARIZE (
+			            d_calendario,
+			            d_calendario[Mês Completo],
+			            "Faturamento", [Faturamento]
+			        ),
+			        [Faturamento], DESC
+			    ),
+			    d_calendario[Mês Completo]
+			)
+			
+			```
+		displayFolder: 3. Temporais
+		lineageTag: d9ac88ac-add4-45ee-8252-32331b1148aa
+
+	measure 'Melhor Mes Bruto' = ```
+			
+			MAXX (
+			    TOPN (
+			        1,
+			        SUMMARIZE (
+			            d_calendario,
+			            d_calendario[Mês Completo],
+			            "Faturamento", [Vendas Transmitidas]
+			        ),
+			        [Faturamento], DESC
+			    ),
+			    d_calendario[Mês Completo]
+			)
+			
+			```
+		displayFolder: 3. Temporais
+		lineageTag: 66dd730c-daa2-4dd4-8459-303c834058a8
+
+	measure 'Melhor Mes Pedidos' =
+			
+			MAXX (
+			    TOPN (
+			        1,
+			        SUMMARIZE (
+			            d_calendario,
+			            d_calendario[Mês Completo],
+			            "Clientes Positivados", [Clientes Positivados]
+			        ),
+			        [Clientes Positivados], DESC
+			    ),
+			    d_calendario[Mês Completo]
+			)
+		displayFolder: 3. Temporais
+		lineageTag: 58513dfd-b8e7-482a-abb0-6603f44e4962
+
+	measure 'Meta Clientes Positivados' = 160
+		formatString: 0
+		displayFolder: 2. Metas
+		lineageTag: dcafc22c-41cd-4d51-8a49-c7dacea8d797
+
+	measure %Meta_Texto =
+			
+			FORMAT([% Meta], "↑ 0.0%; ↓ 0.0%")
+		lineageTag: 2034220f-e173-4590-8d39-434bb53048d0
+
+	partition Medidas = m
+		mode: import
+		source =
+				let
+				    Fonte = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [#"Coluna 1" = _t]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(Fonte,{{"Coluna 1", type text}}),
+				    #"Colunas Removidas" = Table.RemoveColumns(#"Tipo Alterado",{"Coluna 1"})
+				in
+				    #"Colunas Removidas"
+
+	annotation PBI_ResultType = Table
+

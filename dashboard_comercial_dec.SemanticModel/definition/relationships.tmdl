@@ -1,0 +1,37 @@
+relationship AutoDetected_c0e15641-182e-46b5-aaf5-6ca584597bcd
+	fromColumn: f_vendas.'Descrição Produto'
+	toColumn: d_produto.'Descrição Produto'
+
+relationship AutoDetected_89d707a9-69e1-4199-92f8-65fdbaf130f5
+	fromColumn: f_vendas.'Tipo Item Venda'
+	toColumn: d_tipovenda.'Tipo Item Venda'
+
+relationship AutoDetected_ad1371c8-8e39-44b8-a424-0949beb2e6c5
+	fromColumn: f_vendas.'Tipo Pedido Venda'
+	toColumn: d_tipopedido.'Tipo Pedido Venda'
+
+relationship 85467005-a634-4351-b82c-33992302baa0
+	joinOnDateBehavior: datePartOnly
+	fromColumn: d_calendario.Date
+	toColumn: LocalDateTable_e34c2600-d756-4db7-88cb-861ac373e66f.Date
+
+relationship 817bb50b-db2f-85eb-7e3a-d51020149157
+	fromColumn: f_vendas.Data
+	toColumn: d_calendario.Date
+
+relationship 90ce239d-79bc-696d-de1c-ff547c3f5f11
+	fromColumn: f_metas.DataMeta
+	toColumn: d_calendario.Date
+
+relationship AutoDetected_781bb0d7-e241-45b4-99cc-343baf71d360
+	fromColumn: f_vendas.'Descrição RCA'
+	toColumn: d_vendedor.'Descrição RCA'
+
+relationship AutoDetected_a160358d-e959-4d47-a9d6-977e879826c5
+	fromColumn: f_metas.'Descrição RCA'
+	toColumn: d_vendedor.'Descrição RCA'
+
+relationship AutoDetected_da3e55cf-cb59-4cd8-a60e-def52a45d6fb
+	fromColumn: f_vendas.'Descrição Cliente'
+	toColumn: d_cliente.'Descrição Cliente'
+

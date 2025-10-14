@@ -1,0 +1,51 @@
+table f_metas
+	lineageTag: 82769a37-8793-4bc1-b745-eef82411fc6d
+
+	column 'Descrição RCA'
+		dataType: string
+		lineageTag: 6cff7a39-de71-4960-b5b1-f8bf3d52e74c
+		summarizeBy: none
+		sourceColumn: Descrição RCA
+
+		annotation SummarizationSetBy = Automatic
+
+	column DataMeta
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: ff8a6679-1930-4e2d-bca5-ad9997056fba
+		summarizeBy: none
+		sourceColumn: DataMeta
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column ValorMeta
+		dataType: double
+		formatString: 0
+		lineageTag: f47ee6eb-ef8f-4ae3-85b7-5ebf6ead503d
+		summarizeBy: sum
+		sourceColumn: ValorMeta
+
+		annotation SummarizationSetBy = Automatic
+
+	partition f_metas = m
+		mode: import
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents("C:\Users\levia\Desktop\Profissional\pbi_dashboard_comercial\basedados\metasvendedores.xlsx"), null, true),
+				    Planilha1_Sheet = Fonte{[Item="Planilha1",Kind="Sheet"]}[Data],
+				    #"Tipo Alterado" = Table.TransformColumnTypes(Planilha1_Sheet,{{"Column1", type text}, {"Column2", type any}, {"Column3", type any}, {"Column4", type any}, {"Column5", type any}, {"Column6", type any}, {"Column7", type any}, {"Column8", type any}, {"Column9", type any}, {"Column10", type any}, {"Column11", type any}, {"Column12", type date}, {"Column13", type date}}),
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(#"Tipo Alterado", [PromoteAllScalars=true]),
+				    #"Tipo Alterado1" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"Descrição RCA", type text}, {"01/01/2025", Int64.Type}, {"01/02/2025", Int64.Type}, {"01/03/2025", Int64.Type}, {"01/04/2025", Int64.Type}, {"01/05/2025", Int64.Type}, {"01/06/2025", Int64.Type}, {"01/07/2025", Int64.Type}, {"01/08/2025", Int64.Type}, {"01/09/2025", Int64.Type}, {"01/10/2025", Int64.Type}, {"01/11/2025", type date}, {"01/12/2025", type date}}),
+				    #"Outras Colunas Não Dinâmicas" = Table.UnpivotOtherColumns(#"Tipo Alterado1", {"Descrição RCA"}, "Atributo", "Valor"),
+				    #"Tipo Alterado2" = Table.TransformColumnTypes(#"Outras Colunas Não Dinâmicas",{{"Atributo", type date}, {"Valor", Int64.Type}}),
+				    #"Colunas Renomeadas" = Table.RenameColumns(#"Tipo Alterado2",{{"Atributo", "DataMeta"}, {"Valor", "ValorMeta"}}),
+				    #"Tipo Alterado3" = Table.TransformColumnTypes(#"Colunas Renomeadas",{{"ValorMeta", type number}})
+				in
+				    #"Tipo Alterado3"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

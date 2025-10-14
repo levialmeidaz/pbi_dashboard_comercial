@@ -1,0 +1,155 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 101.47198660120034,
+        "y": 938.61587606110322
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 710.29625999695668,
+            "y": 1455.3676296447622
+          },
+          "nodeIndex": "f_vendas",
+          "nodeLineageTag": "d07b91f1-29f5-4fa3-902c-e4d2d3f533da",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 1072.9755096612178
+          },
+          "nodeIndex": "d_cliente",
+          "nodeLineageTag": "998afbae-fa60-457a-b240-63f14236698e",
+          "size": {
+            "height": 145,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 284,
+            "y": 1072.9755096612178
+          },
+          "nodeIndex": "d_produto",
+          "nodeLineageTag": "f2e05030-f69c-4b91-a183-ce9fdfafae4b",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 6,
+          "expandedHeight": 104
+        },
+        {
+          "location": {
+            "x": 568,
+            "y": 1072.9755096612178
+          },
+          "nodeIndex": "d_tipopedido",
+          "nodeLineageTag": "ab8fb3fd-9e1c-4b76-91bc-f441566918ac",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 8,
+          "expandedHeight": 104
+        },
+        {
+          "location": {
+            "x": 852,
+            "y": 1072.9755096612178
+          },
+          "nodeIndex": "d_tipovenda",
+          "nodeLineageTag": "c5309b20-03ff-43d7-a656-16424d9557fa",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 7,
+          "expandedHeight": 104
+        },
+        {
+          "location": {
+            "x": 1136,
+            "y": 1072.9755096612178
+          },
+          "nodeIndex": "d_vendedor",
+          "nodeLineageTag": "d44d8248-3bb7-462f-8f79-eba06f889507",
+          "size": {
+            "height": 173.05732421470589,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 1160.0468097878402,
+            "y": 1817.23746622588
+          },
+          "nodeIndex": "Medidas",
+          "nodeLineageTag": "75980df3-5c5e-418d-8939-7de8aea4ad32",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 1138.4948303460112,
+            "y": 785.43320488961047
+          },
+          "nodeIndex": "f_metas",
+          "nodeLineageTag": "82769a37-8793-4bc1-b745-eef82411fc6d",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 1418.640071474814,
+            "y": 1071.9188247967095
+          },
+          "nodeIndex": "d_calendario",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 9,
+          "expandedHeight": 200
+        },
+        {
+          "location": {
+            "x": 1702.640071474814,
+            "y": 753.71319896467162
+          },
+          "nodeIndex": "auxAnalise",
+          "nodeLineageTag": "ed1d9ddb-4821-445c-a022-54dc644a3d61",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "Todas as tabelas",
+      "zoomValue": 70.9555439009689,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "Todas as tabelas",
+  "defaultDiagram": "Todas as tabelas"
+}

@@ -1,0 +1,46 @@
+table d_cliente
+	lineageTag: 998afbae-fa60-457a-b240-63f14236698e
+
+	column 'Descrição Cliente'
+		dataType: string
+		lineageTag: fb30dc47-3af6-4f36-ae52-1493a5834759
+		summarizeBy: none
+		sourceColumn: Descrição Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column idCliente
+		dataType: string
+		lineageTag: 7bdc37e9-3c2c-47d2-b462-6e27a436e713
+		summarizeBy: none
+		sourceColumn: idCliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column NomeCliente
+		dataType: string
+		lineageTag: a73cc193-d57f-4b18-95b3-75e2fb2b1f2f
+		summarizeBy: none
+		sourceColumn: NomeCliente
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_cliente = m
+		mode: import
+		source =
+				let
+				    Fonte = f_vendas,
+				    #"Outras Colunas Removidas" = Table.SelectColumns(Fonte,{"Descrição Cliente"}),
+				    #"Duplicatas Removidas" = Table.Distinct(#"Outras Colunas Removidas"),
+				    #"Texto Inserido Antes do Delimitador" = Table.AddColumn(#"Duplicatas Removidas", "Texto Antes do Delimitador", each Text.BeforeDelimiter([Descrição Cliente], " - "), type text),
+				    #"Texto Inserido Após o Delimitador" = Table.AddColumn(#"Texto Inserido Antes do Delimitador", "Texto Após o Delimitador", each Text.AfterDelimiter([Descrição Cliente], " - "), type text),
+				    #"Colunas Renomeadas" = Table.RenameColumns(#"Texto Inserido Após o Delimitador",{{"Texto Antes do Delimitador", "idCliente"}, {"Texto Após o Delimitador", "NomeCliente"}})
+				in
+				    #"Colunas Renomeadas"
+
+	changedProperty = IsHidden
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

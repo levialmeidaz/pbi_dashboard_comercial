@@ -1,0 +1,48 @@
+table auxAnalise
+	lineageTag: ed1d9ddb-4821-445c-a022-54dc644a3d61
+
+	column auxAnalise
+		lineageTag: d8e63598-f15d-453e-9c2e-e0f820f7d0a7
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'auxAnalise Pedido'
+
+		relatedColumnDetails
+			groupByColumn: 'auxAnalise Campos'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'auxAnalise Campos'
+		isHidden
+		lineageTag: a43affb3-8989-4576-b312-78684dd779b4
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'auxAnalise Pedido'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'auxAnalise Pedido'
+		isHidden
+		formatString: 0
+		lineageTag: 687823f7-fbca-45cf-94a1-86901f07513b
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition auxAnalise = calculated
+		mode: import
+		source =
+				{
+				    ("Vendas Transmitidas", NAMEOF('Medidas'[Vendas Transmitidas]), 0),
+				    ("Faturamento", NAMEOF('Medidas'[Faturamento]), 1)
+				}
+
+	annotation PBI_Id = aec714d73e1c44a2a987c594ad9f37ad
+

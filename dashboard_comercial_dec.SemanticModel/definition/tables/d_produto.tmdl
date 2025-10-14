@@ -1,0 +1,45 @@
+table d_produto
+	lineageTag: f2e05030-f69c-4b91-a183-ce9fdfafae4b
+
+	column 'Descrição Produto'
+		dataType: string
+		lineageTag: 901c3ee6-c5d7-427e-9ad5-01d868086f1e
+		summarizeBy: none
+		sourceColumn: Descrição Produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column IdProduto
+		dataType: string
+		lineageTag: cd996e33-c4bc-47fa-ba61-85d5c594db43
+		summarizeBy: none
+		sourceColumn: IdProduto
+
+		annotation SummarizationSetBy = Automatic
+
+	column NomeProduto
+		dataType: string
+		lineageTag: fe84e848-7e24-482a-9607-e9163186e93f
+		summarizeBy: none
+		sourceColumn: NomeProduto
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_produto = m
+		mode: import
+		source =
+				let
+				    Fonte = f_vendas,
+				    #"Outras Colunas Removidas" = Table.SelectColumns(Fonte,{"Descrição Produto"}),
+				    #"Duplicatas Removidas" = Table.Distinct(#"Outras Colunas Removidas"),
+				    #"Texto Inserido Antes do Delimitador" = Table.AddColumn(#"Duplicatas Removidas", "Texto Antes do Delimitador", each Text.BeforeDelimiter([Descrição Produto], " - "), type text),
+				    #"Colunas Renomeadas1" = Table.RenameColumns(#"Texto Inserido Antes do Delimitador",{{"Texto Antes do Delimitador", "IdProduto"}}),
+				    #"Texto Inserido Após o Delimitador" = Table.AddColumn(#"Colunas Renomeadas1", "Texto Após o Delimitador", each Text.AfterDelimiter([Descrição Produto], " - "), type text),
+				    #"Colunas Renomeadas" = Table.RenameColumns(#"Texto Inserido Após o Delimitador",{{"Texto Após o Delimitador", "NomeProduto"}})
+				in
+				    #"Colunas Renomeadas"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

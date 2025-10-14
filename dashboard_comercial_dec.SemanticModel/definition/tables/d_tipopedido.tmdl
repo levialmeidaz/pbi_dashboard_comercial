@@ -1,0 +1,25 @@
+table d_tipopedido
+	lineageTag: ab8fb3fd-9e1c-4b76-91bc-f441566918ac
+
+	column 'Tipo Pedido Venda'
+		dataType: string
+		lineageTag: 8ce7e6cb-d514-4077-ba30-b44585967c84
+		summarizeBy: none
+		sourceColumn: Tipo Pedido Venda
+
+		annotation SummarizationSetBy = Automatic
+
+	partition d_tipopedido = m
+		mode: import
+		source =
+				let
+				    Fonte = f_vendas,
+				    #"Outras Colunas Removidas" = Table.SelectColumns(Fonte,{"Tipo Pedido Venda"}),
+				    #"Duplicatas Removidas" = Table.Distinct(#"Outras Colunas Removidas")
+				in
+				    #"Duplicatas Removidas"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+
