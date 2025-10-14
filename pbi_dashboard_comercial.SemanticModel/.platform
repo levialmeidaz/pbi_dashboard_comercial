@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
   "metadata": {
     "type": "SemanticModel",
-    "displayName": "dashboard_comercial_dec"
+    "displayName": "pbi_dashboard_comercial"
   },
   "config": {
     "version": "2.0",
-    "logicalId": "8b5f8bb5-68fe-4dea-9e19-05017effbce0"
+    "logicalId": "f222e67f-6ad2-49b8-93d2-781fff34face"
   }
 }

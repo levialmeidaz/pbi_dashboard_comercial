@@ -21,9 +21,9 @@ PBI_DASHBOARD_COMERCIAL/
 │   ├── 1.2.03-1464 VERSAO MES A MES (13).xlsx
 │   └── metasvendedores.xlsx
 │
-├── dashboard_comercial_dec.Report/      # Definição do relatório (.pbir)
+├── pbi_dashboard_comercial.Report/      # Definição do relatório (.pbir)
 │
-├── dashboard_comercial_dec.SemanticModel/  # Modelo semântico (.pbism)
+├── pbi_dashboard_comercial.SemanticModel/  # Modelo semântico (.pbism)
 │
 ├── pbi_dashboard_comercial.pbip  # Projeto principal do Power BI
 │

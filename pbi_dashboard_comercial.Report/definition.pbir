@@ -3,7 +3,7 @@
   "version": "4.0",
   "datasetReference": {
     "byPath": {
-      "path": "../dashboard_comercial_dec.SemanticModel"
+      "path": "../pbi_dashboard_comercial.SemanticModel"
     }
   }
 }
