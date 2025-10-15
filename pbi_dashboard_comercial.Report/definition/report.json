@@ -65,28 +65,28 @@
       "type": "RegisteredResources",
       "items": [
         {
-          "name": "home6226582183611713.svg",
-          "path": "home6226582183611713.svg",
-          "type": "Image"
-        },
-        {
           "name": "Custom5659271656618274.json",
           "path": "Custom5659271656618274.json",
           "type": "CustomTheme"
         },
         {
-          "name": "pg2054554922222343816.svg",
-          "path": "pg2054554922222343816.svg",
-          "type": "Image"
-        },
-        {
-          "name": "pg1037647955072865336.svg",
-          "path": "pg1037647955072865336.svg",
-          "type": "Image"
-        },
-        {
           "name": "pg3937131661813926.svg",
           "path": "pg3937131661813926.svg",
+          "type": "Image"
+        },
+        {
+          "name": "home9260170227918886.svg",
+          "path": "home9260170227918886.svg",
+          "type": "Image"
+        },
+        {
+          "name": "pg1548399632949395.svg",
+          "path": "pg1548399632949395.svg",
+          "type": "Image"
+        },
+        {
+          "name": "pg2564587680813455.svg",
+          "path": "pg2564587680813455.svg",
           "type": "Image"
         }
       ]
